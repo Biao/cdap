@@ -66,6 +66,15 @@ const styles = (theme): StyleRules => {
         color: theme.palette.blue[100],
       },
     },
+    large: {
+      width: '100%',
+    },
+    medium: {
+      width: '300px',
+    },
+    small: {
+      width: '200px',
+    },
   };
 };
 
@@ -78,6 +87,7 @@ interface IWidgetWrapperProps extends WithStyles<typeof styles> {
   extraConfig: any;
   disabled: boolean;
   hideDescription?: boolean;
+  size?: 'large' | 'small' | 'medium';
 }
 
 const WidgetWrapperView: React.FC<IWidgetWrapperProps> = ({
@@ -90,6 +100,7 @@ const WidgetWrapperView: React.FC<IWidgetWrapperProps> = ({
   disabled,
   hideDescription,
   classes,
+  size = 'large',
 }) => {
   const widgetType = objectQuery(widgetProperty, 'widget-type');
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
@@ -109,6 +120,7 @@ const WidgetWrapperView: React.FC<IWidgetWrapperProps> = ({
       className={classnames(classes.widgetWrapper, {
         [classes.focus]: isFocused && !disabled,
         [classes.noWrapper]: hideWrapper,
+        [classes[size]]: size,
       })}
       onFocus={onFocus}
       onBlur={onBlur}
