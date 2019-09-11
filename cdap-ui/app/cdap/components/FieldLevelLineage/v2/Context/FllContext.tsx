@@ -323,11 +323,8 @@ export class Provider extends React.Component<{ children }, IContextState> {
     }
   }
 
-  public componentDidMount() {
-    this.initialize();
-  }
-
   public render() {
+    this.initialize();
     return <FllContext.Provider value={this.state}>{this.props.children}</FllContext.Provider>;
   }
 }

@@ -28,7 +28,7 @@ import { FllContext, IContextState } from 'components/FieldLevelLineage/v2/Conte
 const styles = (theme) => {
   return createStyles({
     table: {
-      width: '170px',
+      width: '225px',
       border: `1px solid ${theme.palette.grey[300]}`,
       fontSize: '0.92rem',
       marginBottom: '10px',
