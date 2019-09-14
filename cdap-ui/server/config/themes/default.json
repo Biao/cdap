@@ -27,6 +27,7 @@
     "footer-link": "https://www.apache.org/licenses/LICENSE-2.0"
   },
   "features": {
+    "healthcare-features": true,
     "about-product": true,
     "dashboard": true,
     "reports": true,
