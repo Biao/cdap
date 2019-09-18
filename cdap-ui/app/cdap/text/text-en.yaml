@@ -391,6 +391,7 @@ features:
           clearAll: Clear All
           selectAll: Select All
       directivesTabLabel: Transformation steps ({directivesCount})
+      targetSchemaTabLabel: Target
       DirectivesTab:
         label: Transformations
       noColumns: No columns
