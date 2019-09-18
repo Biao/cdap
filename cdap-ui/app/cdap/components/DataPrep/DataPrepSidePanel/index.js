@@ -57,6 +57,7 @@ export default class DataPrepSidePanel extends Component {
   }
 
   setActiveTab(tab) {
+    console.error(tab);
     this.setState({ activeTab: tab });
   }
 
@@ -84,12 +85,23 @@ export default class DataPrepSidePanel extends Component {
     );
   }
 
+  renderTarget() {
+    return (
+      <div className="tab-content">
+        <DirectivesTab />
+      </div>
+    );
+  }
+
   renderTabContent() {
     switch (this.state.activeTab) {
       case 1:
         return this.renderColumns();
       case 2:
         return this.renderDirectives();
+      case 3:
+        return this.renderTarget();
+
       default:
         return null;
     }
@@ -115,6 +127,12 @@ export default class DataPrepSidePanel extends Component {
               {T.translate(`${PREFIX}.directivesTabLabel`, {
                 directivesCount: this.state.directives.length,
               })}
+            </div>
+            <div
+              className={classnames('tab', { active: this.state.activeTab === 3 })}
+              onClick={this.setActiveTab.bind(this, 3)}
+            >
+              {T.translate(`${PREFIX}.targetSchemaTabLabel`)}
             </div>
           </div>
 
