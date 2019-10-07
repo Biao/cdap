@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import DataPrepStore from 'components/DataPrep/store';
 import classnames from 'classnames';
 import ColumnsTab from 'components/DataPrep/DataPrepSidePanel/ColumnsTab';
+import TargetsTab from 'components/DataPrep/DataPrepSidePanel/TargetsTab';
 import DirectivesTab from 'components/DataPrep/DataPrepSidePanel/DirectivesTab';
 import T from 'i18n-react';
 
@@ -88,7 +89,7 @@ export default class DataPrepSidePanel extends Component {
   renderTarget() {
     return (
       <div className="tab-content">
-        <DirectivesTab />
+        <TargetsTab />
       </div>
     );
   }
