@@ -10,6 +10,7 @@
     "dashboard": false,
     "reports": true,
     "data-prep": true,
+    "enhanced-data-prep": false,
     "pipelines": true,
     "analytics": true,
     "rules-engine": true,
