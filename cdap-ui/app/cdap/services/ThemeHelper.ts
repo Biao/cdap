@@ -28,6 +28,7 @@ interface IJsonFeatureNames {
   'control-center'?: string;
   dashboard?: string;
   'data-prep'?: string;
+  'enhanced-data-prep'?: string;
   entities?: string;
   hub?: string;
   metadata?: string;
@@ -75,6 +76,7 @@ interface IOnePoint0SpecJSON extends IThemeJSON {
     dashboard?: boolean;
     reports?: boolean;
     'data-prep'?: boolean;
+    'enhanced-data-prep'?: boolean;
     pipelines?: boolean;
     pipelineStudio?: boolean;
     analytics?: boolean;
@@ -160,6 +162,7 @@ interface IFeatureNames {
   controlCenter: string;
   dashboard: string;
   dataPrep: string;
+  enhancedDataPrep: string;
   entities: string;
   hub: string;
   metadata: string;
@@ -185,6 +188,7 @@ interface IThemeObj {
   showDashboard?: boolean;
   showReports?: boolean;
   showDataPrep?: boolean;
+  showEnhancedDataPrep?: boolean;
   showPipelines?: boolean;
   showPipelineStudio?: boolean;
   showAnalytics?: boolean;
@@ -252,6 +256,7 @@ function parse1Point0Spec(themeJSON: IOnePoint0SpecJSON): IThemeObj {
         controlCenter: 'Control Center',
         dashboard: 'Dashboard',
         dataPrep: 'Wrangler',
+        enhancedDataPrep: 'EnhancedWrangler',
         entities: 'Entities',
         hub: 'Hub',
         metadata: 'Metadata',
@@ -330,6 +335,14 @@ function parse1Point0Spec(themeJSON: IOnePoint0SpecJSON): IThemeObj {
       if ('data-prep' in contentJson['feature-names']) {
         featureNames.dataPrep = objectQuery(contentJson, 'feature-names', 'data-prep');
       }
+      if ('enhanced-data-prep' in contentJson['feature-names']) {
+        featureNames.enhancedDataPrep = objectQuery(
+          contentJson,
+          'feature-names',
+          'enhanced-data-prep'
+        );
+      }
+
       if ('entities' in contentJson['feature-names']) {
         featureNames.entities = objectQuery(contentJson, 'feature-names', 'entities');
       }
@@ -397,6 +410,10 @@ function parse1Point0Spec(themeJSON: IOnePoint0SpecJSON): IThemeObj {
     if ('data-prep' in featuresJson && isBoolean(featuresJson['data-prep'])) {
       features.showDataPrep = featuresJson['data-prep'];
     }
+    if ('enhanced-data-prep' in featuresJson && isBoolean(featuresJson['enhanced-data-prep'])) {
+      features.showEnhancedDataPrep = featuresJson['enhanced-data-prep'];
+    }
+
     if ('pipelines' in featuresJson && isBoolean(featuresJson.pipelines)) {
       features.showPipelines = featuresJson.pipelines;
     }

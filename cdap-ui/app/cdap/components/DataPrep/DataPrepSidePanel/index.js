@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react';
+import { Theme } from 'services/ThemeHelper';
 import DataPrepStore from 'components/DataPrep/store';
 import classnames from 'classnames';
 import ColumnsTab from 'components/DataPrep/DataPrepSidePanel/ColumnsTab';
@@ -87,6 +88,9 @@ export default class DataPrepSidePanel extends Component {
   }
 
   renderTarget() {
+    if (!Theme.showEnhancedDataPrep) {
+      return null;
+    }
     return (
       <div className="tab-content">
         <TargetsTab />
@@ -109,6 +113,18 @@ export default class DataPrepSidePanel extends Component {
   }
 
   render() {
+    let targetTab = null;
+    if (Theme.showEnhancedDataPrep) {
+      targetTab = (
+        <div
+          className={classnames('tab', { active: this.state.activeTab === 3 })}
+          onClick={this.setActiveTab.bind(this, 3)}
+        >
+          {T.translate(`${PREFIX}.targetSchemaTabLabel`)}
+        </div>
+      );
+    }
+
     return (
       <div className="col-3 dataprep-side-panel">
         <div className="tabs">
@@ -129,12 +145,7 @@ export default class DataPrepSidePanel extends Component {
                 directivesCount: this.state.directives.length,
               })}
             </div>
-            <div
-              className={classnames('tab', { active: this.state.activeTab === 3 })}
-              onClick={this.setActiveTab.bind(this, 3)}
-            >
-              {T.translate(`${PREFIX}.targetSchemaTabLabel`)}
-            </div>
+            {targetTab}
           </div>
 
           {this.renderTabContent()}
