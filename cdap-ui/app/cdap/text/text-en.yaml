@@ -394,6 +394,8 @@ features:
       targetSchemaTabLabel: Target
       DirectivesTab:
         label: Transformations
+      TargetSchemaTab:
+        searchPlaceholder: Search by table or field
       noColumns: No columns
       noDirectives: No transformations
     DataPrepTable:
