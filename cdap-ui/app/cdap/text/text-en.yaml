@@ -399,6 +399,8 @@ features:
         targetDataModel: "Target data model"
       DirectivesTab:
         label: Transformations
+      TargetSchemaTab:
+        searchPlaceholder: Search by table or field
       noColumns: No columns
       noDirectives: No transformations
     DataPrepTable:
