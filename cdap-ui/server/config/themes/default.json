@@ -31,7 +31,7 @@
     "dashboard": true,
     "reports": true,
     "data-prep": true,
-    "enhanced-data-prep": false,
+    "enhanced-data-prep": true,
     "pipelines": true,
     "analytics": true,
     "rules-engine": true,
