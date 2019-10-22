@@ -31,7 +31,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-const styles = () => {
+const styles = (theme) => {
   return {
     root: {
       margin: '20px 10px',
@@ -95,8 +95,4 @@ class TargetsTab extends React.PureComponent<ITargetsTabProps, ITargetsTabState>
   }
 }
 
-const TargetsTabWithStyles = withStyles(styles)(TargetsTab);
-
-export default function TargetsTabWrapper() {
-  return <TargetsTabWithStyles />;
-}
+export default withStyles(styles)(TargetsTab);

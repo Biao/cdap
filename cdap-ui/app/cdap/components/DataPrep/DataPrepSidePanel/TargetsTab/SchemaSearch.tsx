@@ -16,42 +16,42 @@
 import * as React from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import T from 'i18n-react';
+import { Theme } from '@material-ui/core';
 
 const PREFIX = 'features.DataPrep.DataPrepSidePanel.TargetSchemaTab';
-
-const styles = (theme) => {
-  return {
-    root: {
-      position: 'relative',
-      flex: 1,
-    },
-    formControl: {
-      display: 'inline-block',
-      borderRadius: '13px',
-      color: '#495057',
-      height: '26px',
-      width: '100%',
-      paddingRight: '25px',
-    },
-    fa: {
-      position: 'absolute',
-      right: '9px',
-      top: '5px',
-      color: '',
-      fontSize: '13px',
-      lineHeight: '1.25',
-    },
-    faTimesCircle: {
-      cursor: 'pointer',
-    },
-  };
-};
 
 interface ISchemaSearchState {
   searchText: string;
 }
 
-class SchemaSearch extends React.PureComponent<WithStyles, ISchemaSearchState> {
+const styles = (theme: Theme) => ({
+  root: {
+    // position: 'relative',
+    flex: 1,
+  },
+  formControl: {
+    display: 'inline-block',
+    borderRadius: '13px',
+    color: '#495057',
+    height: '26px',
+    width: '100%',
+    paddingRight: '25px',
+  },
+  fa: {
+    // position: 'absolute',
+    right: '9px',
+    top: '5px',
+    color: '',
+    fontSize: '13px',
+    lineHeight: '1.25',
+  },
+  faTimesCircle: {
+    cursor: 'pointer',
+  },
+});
+interface ISchemaSearchProps extends WithStyles<typeof styles> {}
+
+class SchemaSearch extends React.PureComponent<ISchemaSearchProps, ISchemaSearchState> {
   private searchBox = React.createRef<HTMLInputElement>();
 
   public state: ISchemaSearchState = {
@@ -63,13 +63,14 @@ class SchemaSearch extends React.PureComponent<WithStyles, ISchemaSearchState> {
   }
 
   public render() {
-    const classes = this.props.classes;
+    const { classes } = this.props;
     return (
       <div className={classes.root}>
         <input
           type="text"
           className={`form-control ${classes.formControl}`}
-          placeholder={T.translate(`${PREFIX}.searchPlaceholder`)}
+          // placeholder={T.translate(`${PREFIX}.searchPlaceholder`)}
+          placeholder="test"
           value={this.state.searchText}
           onChange={this.handleChangeSearch}
           ref={this.searchBox}

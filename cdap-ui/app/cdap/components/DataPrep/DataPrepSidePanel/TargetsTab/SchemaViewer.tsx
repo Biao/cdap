@@ -15,37 +15,58 @@
 */
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import DataPreStore from 'components/DataPrep/store';
+import { Schema } from 'inspector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+interface ISchemaViewerState {
+  schema: any;
+}
+
+const styles = (theme: Theme) => {
+  return {
     root: {
       width: '100%',
       height: 400,
       maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
     },
-  })
-);
+  };
+};
+interface ISchemaViewerProps extends WithStyles<typeof styles> {}
 
-export default function SchemaViewer() {
-  const classes = useStyles();
-
-  return (
-    <List className={classes.root}>
-      {['PERSON', 'OBSERVATOIN_PERIOD', 'VISIT_OCCURRENCE'].map((value) => {
-        return (
-          <div>
-            <Divider />
-            <ListItem button key={value}>
-              <ListItemText primary={value} />
-            </ListItem>
-          </div>
-        );
-      })}
-    </List>
-  );
+function extractName(ref: string): string {
+  // ref should be something like this: '#/definitions/{name}'.
+  return ref.split('/')[2];
 }
+
+class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerState> {
+  public state = {
+    schema: DataPreStore.getState().dataprep.selectedTargetSchema,
+  };
+
+  public render() {
+    const { classes } = this.props;
+    return (
+      <List className={classes.root}>
+        {this.state.schema.schema.oneOf.map((value) => {
+          const name = extractName(value.$ref);
+          return (
+            <div>
+              <Divider />
+              <ListItem button key={name}>
+                <ListItemText primary={name} />
+              </ListItem>
+            </div>
+          );
+        })}
+      </List>
+    );
+  }
+}
+
+export default withStyles(styles)(SchemaViewer);
