@@ -38,10 +38,25 @@ const MyDataPrepApi = {
 
   // Schema Viewer
   list: apiCreator(dataSrc, 'GET', 'REQUEST', `${contextPath}/schemaviewer/schemas`),
-  uploadSchema: apiCreator(dataSrc, 'POST', 'REQUEST', `${contextPath}/schemaviewer/schemas`),
-  getSchema: apiCreator(dataSrc, 'GET', 'REQUEST', `${contextPath}/schemaviewer/schemas/:schemaId`),
-  listEntity: apiCreator(dataSrc, 'GET', 'REQUEST', `${contextPath}/schemaviewer/schemas/:schemaId/entities`),
-  getEntity: apiCreator(dataSrc, 'GET', 'REQUEST', `${contextPath}/schemaviewer/schemas/:schemaId/entities/:entityId`),
+  uploadJsonSchema: apiCreator(dataSrc, 'POST', 'REQUEST', `${contextPath}/schemaviewer/schemas`),
+  getJsonSchema: apiCreator(
+    dataSrc,
+    'GET',
+    'REQUEST',
+    `${contextPath}/schemaviewer/schemas/:schemaId`
+  ),
+  listEntity: apiCreator(
+    dataSrc,
+    'GET',
+    'REQUEST',
+    `${contextPath}/schemaviewer/schemas/:schemaId/entities`
+  ),
+  getEntity: apiCreator(
+    dataSrc,
+    'GET',
+    'REQUEST',
+    `${contextPath}/schemaviewer/schemas/:schemaId/entities/:entityId`
+  ),
 
   // WRANGLER SERVICE MANAGEMENT
   getApp: apiCreator(dataSrc, 'GET', 'REQUEST', appPath),

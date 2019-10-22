@@ -16,6 +16,7 @@
 
 import { combineReducers, createStore } from 'redux';
 import DataPrepActions from 'components/DataPrep/store/DataPrepActions';
+import { OMOP_SCHEMA } from 'api/__mocks__/omop';
 import { composeEnhancers } from 'services/helpers';
 
 const defaultAction = {
@@ -42,6 +43,26 @@ const defaultInitialState = {
   singleWorkspaceMode: false,
   workspaceInfo: null,
   properties: {},
+  availableTargetSchemas: [
+    {
+      id: 'omop',
+      standard: { name: 'OMOP', version: '1.0.0' },
+      version: '0.0',
+      contact: { name: 'John Doe', url: 'www.google.com', email: 'test@gmail.com' },
+    },
+  ],
+  selectedTargetSchemaId: 'omop',
+  selectedTargetSchema: {
+    id: 'omop',
+    standard: { name: 'OMOP', version: '1.0.0' },
+    version: '0.0',
+    contact: { name: 'John Doe', url: 'www.google.com', email: 'test@gmail.com' },
+    schema: OMOP_SCHEMA,
+  },
+  targetSchemaSearch: {
+    query: '',
+    response: [''],
+  },
 };
 
 const errorInitialState = {
@@ -152,6 +173,11 @@ const dataprep = (state = defaultInitialState, action = defaultAction) => {
     case DataPrepActions.enableLoading:
       stateCopy = Object.assign({}, state, {
         loading: true,
+      });
+      break;
+    case DataPrepActions.setSelectedTargetSchema:
+      stateCopy = Object.assign({}, state, {
+        selectedTargetSchemaId: action.payload.selectedTargetSchemaId,
       });
       break;
     case DataPrepActions.setDataError:
