@@ -25,6 +25,7 @@ import { Schema } from 'inspector';
 
 interface ISchemaViewerState {
   schema: any;
+  selectedPath: string[];
 }
 
 const styles = (theme: Theme) => {
@@ -47,18 +48,49 @@ function extractName(ref: string): string {
 class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerState> {
   public state = {
     schema: DataPreStore.getState().dataprep.selectedTargetSchema,
+    selectedPath: [],
+  };
+
+  public onListItemClicked = (key: string) => {
+    this.setState({
+      selectedPath: this.state.selectedPath.concat([key]),
+    });
   };
 
   public render() {
     const { classes } = this.props;
+    let names = [];
+    if (this.state.selectedPath.length !== 0) {
+      const properties = this.state.schema.schema.definitions[this.state.selectedPath[0]]
+        .properties;
+      if (!!properties) {
+        if (!!this.state.selectedPath[1]) {
+          const field = properties[this.state.selectedPath[1]];
+          Object.keys(field).forEach((key) => {
+            names.push(key);
+          });
+        } else {
+          Object.keys(properties).forEach((key) => {
+            names.push(key);
+          });
+        }
+      }
+    } else {
+      names = this.state.schema.schema.oneOf.map((value) => extractName(value.$ref));
+    }
     return (
       <List className={classes.root}>
-        {this.state.schema.schema.oneOf.map((value) => {
-          const name = extractName(value.$ref);
+        {names.map((name) => {
           return (
             <div>
               <Divider />
-              <ListItem button key={name}>
+              <ListItem
+                button
+                key={name}
+                onClick={(e) => {
+                  this.onListItemClicked(name);
+                }}
+              >
                 <ListItemText primary={name} />
               </ListItem>
             </div>
