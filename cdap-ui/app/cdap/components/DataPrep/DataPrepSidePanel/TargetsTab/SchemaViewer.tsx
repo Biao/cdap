@@ -14,17 +14,19 @@
  * the License.
 */
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import DataPreStore from 'components/DataPrep/store';
-import { Schema } from 'inspector';
+import TopEntitiesViewer from 'components/DataPrep/DataPrepSidePanel/TargetsTab/TopEntitiesViewer';
+import { ITopEntityMeta } from 'components/DataPrep/DataPrepSidePanel/TargetsTab/Types';
 
 interface ISchemaViewerState {
   schema: any;
+  inspectPath: string;
   selectedPath: string[];
 }
 
@@ -36,18 +38,38 @@ const styles = (theme: Theme) => {
       maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
     },
+    table: {
+      minWidth: 150,
+    },
+    button: {
+      height: '100%',
+    },
   };
 };
 interface ISchemaViewerProps extends WithStyles<typeof styles> {}
 
-function extractName(ref: string): string {
-  // ref should be something like this: '#/definitions/{name}'.
-  return ref.split('/')[2];
+function createData(
+  name: string,
+  calories?: number,
+  fat?: number,
+  carbs?: number,
+  protein?: number
+) {
+  return { name, calories, fat, carbs, protein };
 }
+
+const rows = [
+  createData('CARE_SITE'),
+  createData('CDM_SOURCE'),
+  createData('Eclair'),
+  createData('Cupcake'),
+  createData('Gingerbread'),
+];
 
 class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerState> {
   public state = {
     schema: DataPreStore.getState().dataprep.selectedTargetSchema,
+    inspectPath: '',
     selectedPath: [],
   };
 
@@ -57,46 +79,61 @@ class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerStat
     });
   };
 
+  public onTopEntityInspected = (key: string) => {
+    this.setState({
+      inspectPath: key,
+    });
+  };
+
+  public onTopEntitySelected = (key: string) => {
+    this.setState({
+      selectedPath: this.state.selectedPath.concat([key]),
+    });
+  };
+
+  private extractTopEntityMeta = (ref: string): ITopEntityMeta => {
+    // ref should be something like this: '#/definitions/{name}'.
+    const name = ref.split('/')[2];
+    if (!this.state.schema.schema.definitions[name]) {
+      debugger;
+    }
+    const description = this.state.schema.schema.definitions[name].description;
+    return { name, description };
+  };
+
   public render() {
     const { classes } = this.props;
     let names = [];
     if (this.state.selectedPath.length !== 0) {
-      const properties = this.state.schema.schema.definitions[this.state.selectedPath[0]]
-        .properties;
-      if (!!properties) {
-        if (!!this.state.selectedPath[1]) {
-          const field = properties[this.state.selectedPath[1]];
-          Object.keys(field).forEach((key) => {
-            names.push(key);
-          });
-        } else {
-          Object.keys(properties).forEach((key) => {
-            names.push(key);
-          });
-        }
-      }
+      // const properties = this.state.schema.schema.definitions[this.state.selectedPath[0]]
+      //   .properties;
+      // if (!!properties) {
+      //   if (!!this.state.selectedPath[1]) {
+      //     const field = properties[this.state.selectedPath[1]];
+      //     Object.keys(field).forEach((key) => {
+      //       names.push(key);
+      //     });
+      //   } else {
+      //     Object.keys(properties).forEach((key) => {
+      //       names.push(key);
+      //     });
+      //   }
+      // }
+
+      return <div>Under Construction!</div>;
     } else {
-      names = this.state.schema.schema.oneOf.map((value) => extractName(value.$ref));
+      // At top entities view
+      names = this.state.schema.schema.oneOf.map((value) => this.extractTopEntityMeta(value.$ref));
     }
     return (
-      <List className={classes.root}>
-        {names.map((name) => {
-          return (
-            <div>
-              <Divider />
-              <ListItem
-                button
-                key={name}
-                onClick={(e) => {
-                  this.onListItemClicked(name);
-                }}
-              >
-                <ListItemText primary={name} />
-              </ListItem>
-            </div>
-          );
-        })}
-      </List>
+      <div className={classes.root}>
+        <TopEntitiesViewer
+          topEntities={names}
+          onInspect={this.onTopEntityInspected}
+          onSelect={this.onTopEntitySelected}
+          selected={this.state.inspectPath}
+        />
+      </div>
     );
   }
 }
