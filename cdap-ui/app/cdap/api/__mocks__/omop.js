@@ -25,7 +25,6 @@ export const OMOP_SCHEMA = {
       CONDITION_ERA: '#/definitions/CONDITION_ERA',
       CONDITION_OCCURRENCE: '#/definitions/CONDITION_OCCURRENCE',
       COST: '#/definitions/COST',
-      DEATH: '#/definitions/DEATH',
       DEVICE_EXPOSURE: '#/definitions/DEVICE_EXPOSURE',
       DOMAIN: '#/definitions/DOMAIN',
       DOSE_ERA: '#/definitions/DOSE_ERA',
@@ -90,9 +89,6 @@ export const OMOP_SCHEMA = {
     },
     {
       $ref: '#/definitions/COST',
-    },
-    {
-      $ref: '#/definitions/DEATH',
     },
     {
       $ref: '#/definitions/DEVICE_EXPOSURE',
