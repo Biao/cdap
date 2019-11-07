@@ -38,14 +38,12 @@ interface IFieldMetadataViewerProps extends WithStyles<typeof styles> {
   fieldMetadata: ISubEntityMeta;
 }
 
-interface IFieldMetadataViewerState {}
-
-interface Row {
+interface IRow {
   label: string;
   value: string;
 }
 
-function createRows(fieldMetadata: ISubEntityMeta): Row[] {
+function createRows(fieldMetadata: ISubEntityMeta): IRow[] {
   const requiredString = fieldMetadata.required ? 'Yes' : 'No';
   return [
     { label: 'Field', value: fieldMetadata.name },
@@ -55,10 +53,7 @@ function createRows(fieldMetadata: ISubEntityMeta): Row[] {
   ];
 }
 
-class FieldMetadataViewer extends React.PureComponent<
-  IFieldMetadataViewerProps,
-  IFieldMetadataViewerState
-> {
+class FieldMetadataViewer extends React.PureComponent<IFieldMetadataViewerProps> {
   public state = {};
 
   public render() {

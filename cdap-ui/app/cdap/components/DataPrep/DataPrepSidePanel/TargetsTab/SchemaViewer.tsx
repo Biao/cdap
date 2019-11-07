@@ -52,9 +52,10 @@ const styles = (theme: Theme) => {
     },
     viewer: {
       width: '100%',
-      height: 400,
-      maxWidth: 360,
       backgroundColor: theme.palette.background.paper,
+      // TODO: calculate the right pixel.
+      height: 'calc(100% - 50px)',
+      overflowY: 'auto' as 'auto',
     },
     table: {
       minWidth: 150,
@@ -197,6 +198,7 @@ class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerStat
           <div className="bread-crumb-wrapper">
             <BreadCrumb
               previousPaths={previousPaths}
+              currentStateIcon="place-holder"
               currentStateLabel={this.state.selectedPath[1]}
             />
           </div>
@@ -237,6 +239,7 @@ class SchemaViewer extends React.Component<ISchemaViewerProps, ISchemaViewerStat
             <div className="bread-crumb-wrapper">
               <BreadCrumb
                 previousPaths={previousPaths}
+                currentStateIcon="place-holder"
                 currentStateLabel={this.state.selectedPath[0]}
               />
             </div>
