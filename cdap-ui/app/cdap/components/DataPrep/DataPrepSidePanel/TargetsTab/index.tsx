@@ -28,26 +28,12 @@ import SchemaSearch from 'components/DataPrep/DataPrepSidePanel/TargetsTab/Schem
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 const styles = (theme) => {
   return {
     root: {
       margin: '20px 10px',
-    },
-    selectLabelRoot: {
-      color: 'black',
-      fontSize: '1.3rem',
-      fontWeight: 500,
-    },
-    tableName: {
-      color: 'black',
-      fontSize: '1rem',
-      fontWeight: 900,
-    },
-    selectRoot: {
-      minWidth: '10rem',
     },
   };
 };
@@ -57,38 +43,17 @@ interface ITargetsTabProps extends WithStyles<typeof styles> {
   children: React.ReactNode;
 }
 
-interface ITargetsTabState {
-  schemaId: string;
-  searchText: string;
-}
+interface ITargetsTabState {}
 
 class TargetsTab extends React.PureComponent<ITargetsTabProps, ITargetsTabState> {
-  public state = {
-    schemaId: 'OMOP',
-    searchText: '',
-  };
-
   constructor(props: Readonly<ITargetsTabProps>) {
     super(props);
   }
-
-  public handleChangeSearch = (e) => {
-    this.setState({ searchText: e.target.value });
-  };
 
   public render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <InputLabel htmlFor="target-schema-selection" classes={{ root: classes.selectLabelRoot }}>
-          Target standard
-        </InputLabel>
-        <Select value={this.state.schemaId} classes={{ root: classes.selectRoot }}>
-          <MenuItem value="OMOP">OMOP</MenuItem>
-        </Select>
-        <div>Select a data table to view schema or search tables and fields</div>
-        <SchemaSearch />
-        <div className={classes.tableName}>Table name</div>
         <SchemaViewer />
       </div>
     );
