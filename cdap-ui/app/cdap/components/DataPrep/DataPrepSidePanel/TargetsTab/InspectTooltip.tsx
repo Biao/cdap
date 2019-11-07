@@ -22,7 +22,7 @@ import Typography from '@material-ui/core/Typography';
 const useStylesBootstrap = makeStyles((theme) => {
   return {
     arrow: {
-      position: 'absolute',
+      position: 'absolute' as 'absolute',
       fontSize: 6,
       '&::before': {
         content: '""',
@@ -49,7 +49,7 @@ const useStylesBootstrap = makeStyles((theme) => {
     tooltip: {
       backgroundColor: theme.palette.common.white,
       color: theme.palette.common.black,
-      position: 'relative',
+      position: 'relative' as 'relative',
     },
     tooltipPlacementLeft: {
       margin: '0 8px',

@@ -26,7 +26,8 @@ interface ISchemaSearchState {
 
 const styles = (theme: Theme) => ({
   root: {
-    // position: 'relative',
+    // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/24952
+    position: 'relative' as 'relative',
     flex: 1,
   },
   formControl: {
@@ -38,7 +39,8 @@ const styles = (theme: Theme) => ({
     paddingRight: '25px',
   },
   fa: {
-    position: 'absolute',
+    // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/24952
+    position: 'absolute' as 'absolute',
     right: '9px',
     top: '5px',
     fontSize: '13px',
