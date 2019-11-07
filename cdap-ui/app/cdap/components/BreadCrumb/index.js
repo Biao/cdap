@@ -25,7 +25,7 @@ export default function BreadCrumb({ previousPaths, currentStateIcon, currentSta
   return (
     <div className="bread-crumb">
       {previousPaths.map((previousPath) => (
-        <Link to={previousPath.pathname} key={previousPath.pathname}>
+        <Link to={previousPath.pathname} key={previousPath.pathname} onClick={previousPath.onClick}>
           {previousPath.label}
         </Link>
       ))}
@@ -40,6 +40,7 @@ BreadCrumb.propTypes = {
     PropTypes.shape({
       pathname: PropTypes.string,
       label: PropTypes.string,
+      onClick: PropTypes.func,
     })
   ),
   currentStateIcon: PropTypes.string,
