@@ -29,10 +29,6 @@ import { classes } from 'istanbul-lib-coverage';
 
 const styles = (theme: Theme) => {
   return {
-    root: {
-      // position: 'relative',
-      flex: 1,
-    },
     span: {
       cursor: 'pointer',
       '&:hover': {
@@ -74,8 +70,7 @@ class TopEntitiesViewer extends React.PureComponent<
   };
 
   public render() {
-    const { classes } = this.props;
-    const topEntities = this.props.topEntities;
+    const { classes, topEntities } = this.props;
     if (!topEntities) {
       return null;
     }

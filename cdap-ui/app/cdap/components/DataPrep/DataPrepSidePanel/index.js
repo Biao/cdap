@@ -59,7 +59,6 @@ export default class DataPrepSidePanel extends Component {
   }
 
   setActiveTab(tab) {
-    console.error(tab);
     this.setState({ activeTab: tab });
   }
 

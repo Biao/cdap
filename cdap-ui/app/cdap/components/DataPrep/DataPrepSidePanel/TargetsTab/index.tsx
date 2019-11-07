@@ -34,6 +34,7 @@ const styles = (theme) => {
   return {
     root: {
       margin: '20px 10px',
+      height: '100%',
     },
   };
 };
@@ -43,9 +44,7 @@ interface ITargetsTabProps extends WithStyles<typeof styles> {
   children: React.ReactNode;
 }
 
-interface ITargetsTabState {}
-
-class TargetsTab extends React.PureComponent<ITargetsTabProps, ITargetsTabState> {
+class TargetsTab extends React.PureComponent<ITargetsTabProps> {
   constructor(props: Readonly<ITargetsTabProps>) {
     super(props);
   }
