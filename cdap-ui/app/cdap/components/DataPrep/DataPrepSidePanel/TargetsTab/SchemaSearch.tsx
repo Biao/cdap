@@ -38,12 +38,11 @@ const styles = (theme: Theme) => ({
     paddingRight: '25px',
   },
   fa: {
-    // position: 'absolute',
+    position: 'absolute',
     right: '9px',
     top: '5px',
-    color: '',
     fontSize: '13px',
-    lineHeight: '1.25',
+    lineHeight: 1.25,
   },
   faTimesCircle: {
     cursor: 'pointer',
