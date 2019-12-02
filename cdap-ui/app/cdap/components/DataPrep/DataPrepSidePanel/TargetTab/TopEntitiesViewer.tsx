@@ -16,12 +16,12 @@
 import React, { useState } from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import InspectTooltip from 'components/DataPrep/DataPrepSidePanel/TargetsTab/InspectTooltip';
-import { ISubEntityMeta } from 'components/DataPrep/DataPrepSidePanel/TargetsTab/Types';
+import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
+import InspectTooltip from 'components/DataPrep/DataPrepSidePanel/TargetTab/InspectTooltip';
+import { ITopEntityMeta } from 'components/DataPrep/DataPrepSidePanel/TargetTab/Types';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import { Divider } from '@material-ui/core';
@@ -37,52 +37,46 @@ const styles = (theme: Theme) => {
   };
 };
 
-interface ISubEntitiesViewerProps extends WithStyles<typeof styles> {
-  subEntities: ISubEntityMeta[];
+interface ITopEntitiesViewerProps extends WithStyles<typeof styles> {
+  topEntities: ITopEntityMeta[];
   selected: string;
   onInspect: (key: string) => void;
   onSelect: (key: string) => void;
 }
 
-interface ISubEntitiesViewerState {
+interface ITopEntitiesViewerState {
   aboutPageOpen: boolean;
 }
 
-function generateTooltipFragment(meta: ISubEntityMeta) {
+function generateTooltipFragment(meta: ITopEntityMeta) {
   return (
     <React.Fragment>
       <div>Resouce</div>
       <div>{meta.name}</div>
       <Divider />
-      <div>Required: {meta.required ? 'yes' : 'no'}</div>
-      <div>Type: {meta.type}</div>
       <div>SCOPE AND USAGE</div>
       <p>{meta.description}</p>
     </React.Fragment>
   );
 }
 
-class SubEntitiesViewer extends React.PureComponent<
-  ISubEntitiesViewerProps,
-  ISubEntitiesViewerState
+class TopEntitiesViewer extends React.PureComponent<
+  ITopEntitiesViewerProps,
+  ITopEntitiesViewerState
 > {
   public state = {
     aboutPageOpen: false,
   };
 
   public render() {
-    const { classes } = this.props;
-
+    const { classes, topEntities } = this.props;
+    if (!topEntities) {
+      return null;
+    }
     return (
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Field name</TableCell>
-            <TableCell>Type</TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
-          {this.props.subEntities.map((meta) => {
+          {this.props.topEntities.map((meta) => {
             const isSelected = meta.name === this.props.selected;
             return (
               <InspectTooltip
@@ -110,9 +104,6 @@ class SubEntitiesViewer extends React.PureComponent<
                       {meta.name}
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <span>{meta.type}</span>
-                  </TableCell>
                 </TableRow>
               </InspectTooltip>
             );
@@ -123,4 +114,4 @@ class SubEntitiesViewer extends React.PureComponent<
   }
 }
 
-export default withStyles(styles)(SubEntitiesViewer);
+export default withStyles(styles)(TopEntitiesViewer);

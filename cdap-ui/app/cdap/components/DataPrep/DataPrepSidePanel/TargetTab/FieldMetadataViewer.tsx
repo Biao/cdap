@@ -20,8 +20,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
-import InspectTooltip from 'components/DataPrep/DataPrepSidePanel/TargetsTab/InspectTooltip';
-import { ISubEntityMeta } from 'components/DataPrep/DataPrepSidePanel/TargetsTab/Types';
+import InspectTooltip from 'components/DataPrep/DataPrepSidePanel/TargetTab/InspectTooltip';
+import { ISubEntityMeta } from 'components/DataPrep/DataPrepSidePanel/TargetTab/Types';
 
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 
