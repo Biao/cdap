@@ -118,6 +118,11 @@ class DataModelViewer extends React.Component<IDataModelViewerProps, IDataModelV
     return { name, description };
   };
 
+  private onSearchResultSelected = (path: string) => {
+    const splits = path.split(' > ');
+    this.setState({ selectedPath: splits });
+  };
+
   private getSubEntityMeta(topEntityName: string, subEntityName: string): ISubEntityMeta | null {
     const properties = this.state.dataModel.schema.definitions[topEntityName].properties;
     const requiredProperties = this.state.dataModel.schema.definitions[topEntityName].required;
@@ -187,14 +192,13 @@ class DataModelViewer extends React.Component<IDataModelViewerProps, IDataModelV
           </div>
 
           <div>Select or hover over a resource for more details</div>
-          <SchemaSearch />
+          <SchemaSearch onSearchResultSelected={this.onSearchResultSelected} />
           <div className={classes.viewer}>
             <FieldMetadataViewer fieldMetadata={subEntity} />
           </div>
         </div>
       );
     } else if (this.state.selectedPath.length === 1) {
-      debugger;
       const properties = this.state.dataModel.schema.definitions[this.state.selectedPath[0]]
         .properties;
       const requiredProperties = this.state.dataModel.schema.definitions[this.state.selectedPath[0]]
@@ -229,7 +233,7 @@ class DataModelViewer extends React.Component<IDataModelViewerProps, IDataModelV
             </div>
 
             <div>Select or hover over a resource for more details</div>
-            <SchemaSearch />
+            <SchemaSearch onSearchResultSelected={this.onSearchResultSelected} />
             <div className={classes.viewer}>
               <SubEntitiesViewer
                 subEntities={subEntities}
@@ -263,7 +267,7 @@ class DataModelViewer extends React.Component<IDataModelViewerProps, IDataModelV
             <MenuItem value="OMOP">{'OMOP'}</MenuItem>
           </Select>
           <div>Select a data table to view schema or search tables and fields</div>
-          <SchemaSearch />
+          <SchemaSearch onSearchResultSelected={this.onSearchResultSelected} />
           <div className={classes.tableName}>Table name</div>
           <div className={classes.viewer}>
             <TopEntitiesViewer
