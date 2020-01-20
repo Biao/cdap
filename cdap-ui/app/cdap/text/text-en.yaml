@@ -838,6 +838,12 @@ features:
        title:
           plural: Keep selected columns
           singular: Keep column
+      MapToTarget:
+        base32: Base32
+        base64: Base64
+        hex: Hex
+        title: Map To Target
+        url: URL
       MarkAsError:
         Conditions:
           CUSTOMCONDITION: Custom condition

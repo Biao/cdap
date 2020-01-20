@@ -52,6 +52,8 @@ const defaultInitialState = {
     },
   ],
   selectedTargetSchemaId: 'omop',
+  mapToTable: '',
+  mappedFields: [],
   selectedTargetSchema: {
     id: 'omop',
     standard: { name: 'OMOP', version: '1.0.0' },
@@ -125,6 +127,16 @@ const dataprep = (state = defaultInitialState, action = defaultAction) => {
         properties,
       };
     }
+    case DataPrepActions.setMapToTable:
+      stateCopy = Object.assign({}, state, {
+        mapToTable: action.payload.mapToTable,
+      });
+      break;
+    case DataPrepActions.setMappedFields:
+      stateCopy = Object.assign({}, state, {
+        mappedFields: action.payload.mappedFields,
+      });
+      break;
     case DataPrepActions.setWorkspaceId:
       stateCopy = Object.assign({}, state, {
         workspaceId: action.payload.workspaceId,

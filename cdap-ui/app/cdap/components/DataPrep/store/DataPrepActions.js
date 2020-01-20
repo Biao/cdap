@@ -35,6 +35,8 @@ const DataPrepActions = {
   setColumnsInformation: 'DATAPREP_SET_COLUMNS_INFORMATION',
   setWorkspaceList: 'DATAPREP_SET_WORKSPACE_LIST',
   setSelectedTargetSchema: 'DATAPREP_SET_SELECTED_TARGET_SCHEMA',
+  setMapToTable: 'DATAPREP_SET_MAP_TO_TABLE',
+  setMappedFields: 'DATAPREP_SET_MAPPED_FIELDS',
 };
 
 export default DataPrepActions;

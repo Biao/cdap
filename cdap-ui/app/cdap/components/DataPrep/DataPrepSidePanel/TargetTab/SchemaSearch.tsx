@@ -185,10 +185,11 @@ class SchemaSearch extends React.PureComponent<ISchemaSearchProps, ISchemaSearch
       minMatchCharLength: 2,
       maxPatternLength: 32,
     };
+    console.log(this.getSearchableDefinitions().length);
     const fuse = new Fuse(this.getSearchableDefinitions(), fuseOptions);
     const results = fuse.search(query);
     const activeResults = results.map((result) => {
-      result.item.path += result.score;
+      // result.item.path += result.score;
       return result.item as ISearchableField;
     });
     this.setState({ showingResult: true, activeResults });

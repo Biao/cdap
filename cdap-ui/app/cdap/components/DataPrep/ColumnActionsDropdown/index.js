@@ -29,6 +29,7 @@ import ScrollableList from 'components/ScrollableList';
 
 // Directives List
 import ParseDirective from 'components/DataPrep/Directives/Parse';
+import MapToTarget from 'components/DataPrep/Directives/MapToTarget';
 import FillNullOrEmpty from 'components/DataPrep/Directives/FillNullOrEmpty';
 import DropColumnDirective from 'components/DataPrep/Directives/DropColumn';
 import KeepColumnDirective from 'components/DataPrep/Directives/KeepColumn';
@@ -82,6 +83,14 @@ export default class ColumnActionsDropdown extends Component {
       {
         id: uuidV4(),
         tag: ParseDirective,
+        requiredColCount: 1,
+      },
+      {
+        tag: 'divider',
+      },
+      {
+        id: uuidV4(),
+        tag: MapToTarget,
         requiredColCount: 1,
       },
       {
