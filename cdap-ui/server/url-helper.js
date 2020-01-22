@@ -19,13 +19,29 @@
 const REQUEST_ORIGIN_ROUTER = 'ROUTER';
 const REQUEST_ORIGIN_MARKET = 'MARKET';
 
+const HOST_PLACEHOLDER = 'https://www.google.com';
+
 function constructUrl(cdapConfig, path, origin = REQUEST_ORIGIN_ROUTER) {
   if (!cdapConfig) {
     return null;
   }
   path = path && path[0] === '/' ? path.slice(1) : path;
   if (origin === REQUEST_ORIGIN_MARKET) {
-    return `${cdapConfig['market.base.url']}/${path}`;
+    const url = new URL(path, HOST_PLACEHOLDER);
+    if (url.searchParams.has('marketName')) {
+      const marketName = url.searchParams.get('marketName');
+      console.log(`marketName = ${marketName}`);
+      const found = cdapConfig['market.base.urls'].find(element => element.name === marketName);
+      if (!found) {
+        return null;
+      }
+      console.log(`returned url = ${found.url}${url.pathname}`);
+      return `${found.url}${url.pathname}`;
+    } else {
+      console.log(`${cdapConfig['market.base.url']}/${path}`);
+      return `${cdapConfig['market.base.url']}/${path}`;
+    }
+
   }
   let routerhost = cdapConfig['router.server.address'],
     routerport =

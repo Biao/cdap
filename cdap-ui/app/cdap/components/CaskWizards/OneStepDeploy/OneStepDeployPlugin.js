@@ -71,7 +71,7 @@ export default class OneStepDeployPlugin extends Component {
   }
 
   publishPlugin() {
-    const { name, version } = this.props.input.package;
+    const { name, version, marketName } = this.props.input.package;
 
     const args = this.props.input.action.arguments;
 
@@ -106,6 +106,7 @@ export default class OneStepDeployPlugin extends Component {
       MyMarketApi.getSampleData({
         entityName: name,
         entityVersion: version,
+        marketName,
         filename: pluginConfig,
       }).subscribe((res) => {
         let pluginJson = res;

@@ -29,10 +29,11 @@ export default class LicenseStep extends Component {
     };
   }
   componentWillMount() {
-    let { entityName, entityVersion, licenseFileName } = this.props;
+    let { entityName, entityVersion, marketName, licenseFileName } = this.props;
     let params = {
       entityName,
       entityVersion,
+      marketName,
       filename: licenseFileName,
     };
     MyMarketApi.getSampleData(params).subscribe((license) => {
@@ -68,6 +69,7 @@ export default class LicenseStep extends Component {
 LicenseStep.propTypes = {
   entityName: PropTypes.string,
   entityVersion: PropTypes.string,
+  marketName: PropTypes.string,
   licenseFileName: PropTypes.string,
   onReject: PropTypes.func.required,
   onAgree: PropTypes.func.required,

@@ -19,14 +19,49 @@ import { apiCreatorAbsPath } from 'services/resource-helper';
 
 let dataSrc = DataSourceConfigurer.getInstance();
 const basepath = window.CDAP_CONFIG.marketUrl;
+const basepaths = window.CDAP_CONFIG.marketUrls;
 // FIXME (CDAP-14836): Right now this is scattered across node and client. Need to consolidate this.
 const REQUEST_TYPE_MARKET = 'MARKET';
 const requestOptions = {
   requestOrigin: REQUEST_TYPE_MARKET,
 };
 
+function getMarketBaseUrlFromName(name) {
+  const found = basepaths.find((element) => element.name === name);
+  if (found) {
+    return found.url;
+  }
+  return '';
+}
+
 export const MyMarketApi = {
   list: apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/packages.json`, requestOptions),
+  /*
+  list: () => {
+    const observables = basepath.map((element) => {
+      const requestOptions = {
+        requestOrigin: REQUEST_TYPE_MARKET,
+        marketHost: element,
+      };
+      return apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/packages.json`, requestOptions)();
+    });
+    return Observable.combineLatest(observables).map((res) => {
+      console.log(res);
+      return res.flat().reduce((accumulator, currentValue) => {
+        if (
+          accumulator.findIndex(
+            (element) =>
+              element.name === currentValue.name && element.version === currentValue.version
+          ) === -1
+        ) {
+          accumulator.push(currentValue);
+        }
+        return accumulator;
+      }, []);
+    });
+  },
+*/
+
   getCategories: apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/categories.json`, requestOptions),
   get: apiCreatorAbsPath(
     dataSrc,
@@ -36,10 +71,28 @@ export const MyMarketApi = {
     requestOptions
   ),
   getCategoryIcon: (category) => {
-    return `${basepath}/categories/${category}/icon.png`;
+    if (!Array.isArray(basepaths)) {
+      return `${basepath}/categories/${category.name}/icon.png`;
+    }
+
+    if (category.marketName) {
+      const marketBaseUrl = getMarketBaseUrlFromName(category.marketName);
+      return `${marketBaseUrl}/categories/${category.name}/icon.png`;
+    }
+    return `${basepaths[0].url}/categories/${category.name}/icon.png`;
   },
   getIcon: (entity) => {
-    return `${basepath}/packages/${entity.name}/${entity.version}/icon.png`;
+    if (!Array.isArray(basepaths)) {
+      return `${basepath}/packages/${entity.name}/${entity.version}/icon.png`;
+    }
+
+    if (entity.marketName) {
+      const marketBaseUrl = getMarketBaseUrlFromName(entity.marketName);
+      return `${marketBaseUrl}/packages/${entity.name}/${entity.version}/icon.png`;
+    }
+    console.log(`${basepaths[0].url}/packages/${entity.name}/${entity.version}/icon.png`);
+    // Uses the default CDAP url if no marketName. Any custom market should include its marketName in the entity.
+    return `${basepaths[0].url}/packages/${entity.name}/${entity.version}/icon.png`;
   },
   getSampleData: apiCreatorAbsPath(
     dataSrc,

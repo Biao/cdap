@@ -49,6 +49,7 @@ export default class MarketHydratorPluginUpload extends Component {
     let params = {
       entityName: this.props.input.package.name,
       entityVersion: this.props.input.package.version,
+      marketName: this.props.input.package.marketName,
       filename: config.value,
     };
     MyMarketApi.getSampleData(params).subscribe((res) => {

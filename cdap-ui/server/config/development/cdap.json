@@ -11,6 +11,10 @@
   "enable.preview": "true",
   "dashboard.router.check.timeout.secs": "0",
   "market.base.url": "https://hub.cdap.io/dev/v2",
+  "market.base.urls": [
+    { "name": "cdap", "url": "https://hub.cdap.io/dev/v2"},
+    { "name": "healthcare", "url": "https://storage.googleapis.com/aeba5c94-db31-451a-85ea-27047cbe133b"}
+  ],
   "ui.theme.file": "config/themes/default.json",
   "session.secret.key": "sample-secret-key-for-encryption"
 }

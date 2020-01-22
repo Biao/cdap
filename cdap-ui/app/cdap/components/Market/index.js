@@ -26,6 +26,20 @@ import UsecaseTab from 'components/Market/UsecaseTab';
 import { CATEGORY_MAP, DEFAULT_CATEGORIES } from 'components/Market/CategoryMap';
 import { objectQuery } from 'services/helpers';
 
+import { Observable } from 'rxjs/Observable';
+
+import isEqual from 'lodash/isEqual';
+
+// flat and dedup an array which
+function flatAndDedupArray(array) {
+  return array.flat().reduce((accumulator, currentValue) => {
+    if (accumulator.find((element) => isEqual(element, currentValue)) === undefined) {
+      accumulator.push(currentValue);
+    }
+    return accumulator;
+  }, []);
+}
+
 export default class Market extends Component {
   constructor(props) {
     super(props);
@@ -49,10 +63,22 @@ export default class Market extends Component {
       }
     });
 
-    MyMarketApi.list().subscribe(this.getCategories, (err) => {
-      console.log('Error', err);
-      MarketAction.setError();
-    });
+    if (Array.isArray(window.CDAP_CONFIG.marketUrls)) {
+      const observables = window.CDAP_CONFIG.marketUrls.map((element) =>
+        MyMarketApi.list({ marketName: element.name })
+      );
+      Observable.combineLatest(observables)
+        .map(flatAndDedupArray)
+        .subscribe(this.getCategories, (err) => {
+          console.log('Error', err);
+          MarketAction.setError();
+        });
+    } else {
+      MyMarketApi.list().subscribe(this.getCategories, (err) => {
+        console.log('Error', err);
+        MarketAction.setError();
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -64,6 +90,7 @@ export default class Market extends Component {
   }
 
   getCategories = (packages) => {
+    console.log(packages);
     const filteredPackages = packages.filter((packet) => {
       return (
         packet.categories.indexOf('datapack') === -1 &&
@@ -72,43 +99,48 @@ export default class Market extends Component {
       );
     });
 
-    MyMarketApi.getCategories().subscribe(
-      (categories) => {
-        categories = categories.filter(
-          (category) => ['gcp', 'usecase', 'datapack'].indexOf(category.name) === -1
-        );
-        this.processPackagesAndCategories(filteredPackages, categories);
-      },
-      () => {
-        // If categories do not come from backend, revert back to get categories from existing packages
-        const categoriesMap = {};
-        filteredPackages.forEach((pack) => {
-          pack.categories.forEach((category) => {
-            categoriesMap[category] = true;
-          });
-        });
-
-        let aggregateCategories = [];
-
-        DEFAULT_CATEGORIES.forEach((cat) => {
-          if (categoriesMap[cat]) {
-            aggregateCategories.push(cat);
-            delete categoriesMap[cat];
-          }
-        });
-
-        const remainingCategories = Object.keys(categoriesMap);
-
-        aggregateCategories = aggregateCategories.concat(remainingCategories).map((cat) => {
-          return {
-            name: cat,
-            hasIcon: false,
-          };
-        });
-
-        this.processPackagesAndCategories(filteredPackages, aggregateCategories);
-      }
+    const observables = window.CDAP_CONFIG.marketUrls.map((element) =>
+      MyMarketApi.getCategories({ marketName: element.name })
     );
+    Observable.combineLatest(observables)
+      .map(flatAndDedupArray)
+      .subscribe(
+        (categories) => {
+          categories = categories.filter(
+            (category) => ['gcp', 'usecase', 'datapack'].indexOf(category.name) === -1
+          );
+          this.processPackagesAndCategories(filteredPackages, categories);
+        },
+        () => {
+          // If categories do not come from backend, revert back to get categories from existing packages
+          const categoriesMap = {};
+          filteredPackages.forEach((pack) => {
+            pack.categories.forEach((category) => {
+              categoriesMap[category] = true;
+            });
+          });
+
+          let aggregateCategories = [];
+
+          DEFAULT_CATEGORIES.forEach((cat) => {
+            if (categoriesMap[cat]) {
+              aggregateCategories.push(cat);
+              delete categoriesMap[cat];
+            }
+          });
+
+          const remainingCategories = Object.keys(categoriesMap);
+
+          aggregateCategories = aggregateCategories.concat(remainingCategories).map((cat) => {
+            return {
+              name: cat,
+              hasIcon: false,
+            };
+          });
+
+          this.processPackagesAndCategories(filteredPackages, aggregateCategories);
+        }
+      );
   };
 
   processPackagesAndCategories(packages, categories) {
@@ -157,7 +189,7 @@ export default class Market extends Component {
         icon = {
           type: 'link',
           arguments: {
-            url: MyMarketApi.getCategoryIcon(category.name),
+            url: MyMarketApi.getCategoryIcon(category),
           },
         };
       } else if (categoryContent.displayName) {

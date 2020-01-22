@@ -109,8 +109,11 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
   app.use(frameguard({ action: 'sameorigin' }));
 
   if (!isModeDevelopment()) {
-    let marketUrl = url.parse(cdapConfig['market.base.url']);
-    let imgsrc = `${marketUrl.protocol}//${marketUrl.host}`;
+    const imgSrcs = cdapConfig['market.base.url']
+        .map(urlString => url.parse(urlString))
+        .map(marketUrl => `${marketUrl.protocol}//${marketUrl.host}`)
+        .join(' ');
+
     /**
      * Adding nonce to every response pipe.
      */
@@ -121,7 +124,7 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
     app.use(
       csp({
         directives: {
-          imgSrc: [`'self' data: ${imgsrc}`],
+          imgSrc: [`'self' data: ${imgSrcs}`],
           scriptSrc: [
             (req, res) => `'nonce-${res.locals.nonce}'`,
             `'unsafe-inline'`,
@@ -163,6 +166,7 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
         defaultCheckpointDir: cdapConfig['data.streams.default.checkpoint.directory'] || false,
       },
       marketUrl: cdapConfig['market.base.url'],
+      marketUrls: cdapConfig['market.base.urls'],
       securityEnabled: authAddress.enabled,
       isEnterprise: isModeProduction(),
       sandboxMode: process.env.NODE_ENV,

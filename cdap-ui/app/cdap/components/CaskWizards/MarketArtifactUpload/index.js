@@ -31,6 +31,7 @@ export default function MarketArtifactUploadWizard({ input, onClose, isOpen, dis
   let params = {
     entityName: input.package.name,
     entityVersion: input.package.version,
+    marketName: input.package.marketName,
     filename: config.value,
   };
 
