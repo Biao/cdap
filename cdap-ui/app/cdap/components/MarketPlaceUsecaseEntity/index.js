@@ -80,6 +80,7 @@ export default class MarketPlaceUsecaseEntity extends Component {
     MyMarketApi.get({
       packageName: this.props.entity.name,
       version: this.props.entity.version,
+      marketName: this.props.entity.marketName,
     }).subscribe(
       (res) => {
         this.setState({
@@ -166,6 +167,7 @@ MarketPlaceUsecaseEntity.propTypes = {
   entity: PropTypes.shape({
     name: PropTypes.string,
     version: PropTypes.string,
+    marketName: PropTypes.string,
     label: PropTypes.string,
     author: PropTypes.string,
     description: PropTypes.string,

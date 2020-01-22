@@ -36,32 +36,6 @@ function getMarketBaseUrlFromName(name) {
 
 export const MyMarketApi = {
   list: apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/packages.json`, requestOptions),
-  /*
-  list: () => {
-    const observables = basepath.map((element) => {
-      const requestOptions = {
-        requestOrigin: REQUEST_TYPE_MARKET,
-        marketHost: element,
-      };
-      return apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/packages.json`, requestOptions)();
-    });
-    return Observable.combineLatest(observables).map((res) => {
-      console.log(res);
-      return res.flat().reduce((accumulator, currentValue) => {
-        if (
-          accumulator.findIndex(
-            (element) =>
-              element.name === currentValue.name && element.version === currentValue.version
-          ) === -1
-        ) {
-          accumulator.push(currentValue);
-        }
-        return accumulator;
-      }, []);
-    });
-  },
-*/
-
   getCategories: apiCreatorAbsPath(dataSrc, 'GET', 'REQUEST', `/categories.json`, requestOptions),
   get: apiCreatorAbsPath(
     dataSrc,
@@ -90,7 +64,6 @@ export const MyMarketApi = {
       const marketBaseUrl = getMarketBaseUrlFromName(entity.marketName);
       return `${marketBaseUrl}/packages/${entity.name}/${entity.version}/icon.png`;
     }
-    console.log(`${basepaths[0].url}/packages/${entity.name}/${entity.version}/icon.png`);
     // Uses the default CDAP url if no marketName. Any custom market should include its marketName in the entity.
     return `${basepaths[0].url}/packages/${entity.name}/${entity.version}/icon.png`;
   },

@@ -151,12 +151,7 @@ export default class Datasource {
     if (resource.requestOrigin) {
       generatedResource.requestOrigin = resource.requestOrigin;
     }
-    /*
-    if (resource.marketHost) {
-      generatedResource.marketHost = resource.marketHost;
-    }
-    */
-   
+
     let subject = new Subject();
 
     this.bindings[generatedResource.id] = {
@@ -203,9 +198,6 @@ export default class Datasource {
 
     if (resource.requestOrigin) {
       generatedResource.requestOrigin = resource.requestOrigin;
-    }
-    if (resource.marketHost) {
-      generatedResource.marketHost = resource.marketHost;
     }
     let subject = new Subject();
 

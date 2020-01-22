@@ -67,6 +67,9 @@ export default class MarketPlaceEntity extends Component {
     MyMarketApi.get({
       packageName: this.props.entity.name,
       version: this.props.entity.version,
+      // The following only works when marketName field is added in packages.json.
+      // marketName: this.props.entity.marketName,
+      marketName: 'healthcare',
     }).subscribe(
       (res) => {
         this.setState({ entityDetail: res });
@@ -300,6 +303,7 @@ MarketPlaceEntity.childContextTypes = {
   entity: PropTypes.shape({
     name: PropTypes.string,
     version: PropTypes.string,
+    marketName: PropTypes.string,
     label: PropTypes.string,
     author: PropTypes.string,
     description: PropTypes.string,

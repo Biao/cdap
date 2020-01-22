@@ -109,10 +109,17 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
   app.use(frameguard({ action: 'sameorigin' }));
 
   if (!isModeDevelopment()) {
-    const imgSrcs = cdapConfig['market.base.url']
+    let imageSrcs; 
+    if (!Array.isArray(cdapConfig['market.base.urls'])) {
+      let marketUrl = url.parse(cdapConfig['market.base.url']);
+      imgSrcs = `${marketUrl.protocol}//${marketUrl.host}`;
+  
+    } else {
+      imgSrcs = cdapConfig['market.base.urls']
         .map(urlString => url.parse(urlString))
         .map(marketUrl => `${marketUrl.protocol}//${marketUrl.host}`)
         .join(' ');
+    }
 
     /**
      * Adding nonce to every response pipe.

@@ -46,7 +46,8 @@ export default class MarketEntityModal extends Component {
   componentWillMount() {
     MyMarketApi.get({
       packageName: this.props.entity.name,
-      version: this.props.entity.version
+      version: this.props.entity.version,
+      marketName: this.props.entity.marketName,
     }).subscribe((res) => {
       this.setState({entityDetail: res});
     }, (err) => {

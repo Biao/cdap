@@ -19,7 +19,15 @@
 const REQUEST_ORIGIN_ROUTER = 'ROUTER';
 const REQUEST_ORIGIN_MARKET = 'MARKET';
 
-const HOST_PLACEHOLDER = 'https://www.google.com';
+// return market name string from path's query parameter. empty string will be
+// return if not found.
+function getMarketNameParam(path) {
+  // A place holder host name to make sure URL won't throw exceptions. The host
+  // is not part of the URL is not used.
+  const HOST_PLACEHOLDER = 'https://www.google.com';
+  const url = new URL(path, HOST_PLACEHOLDER);
+  return url.searchParams.get('marketName');
+}
 
 function constructUrl(cdapConfig, path, origin = REQUEST_ORIGIN_ROUTER) {
   if (!cdapConfig) {
@@ -27,21 +35,13 @@ function constructUrl(cdapConfig, path, origin = REQUEST_ORIGIN_ROUTER) {
   }
   path = path && path[0] === '/' ? path.slice(1) : path;
   if (origin === REQUEST_ORIGIN_MARKET) {
-    const url = new URL(path, HOST_PLACEHOLDER);
-    if (url.searchParams.has('marketName')) {
-      const marketName = url.searchParams.get('marketName');
-      console.log(`marketName = ${marketName}`);
-      const found = cdapConfig['market.base.urls'].find(element => element.name === marketName);
-      if (!found) {
-        return null;
-      }
-      console.log(`returned url = ${found.url}${url.pathname}`);
-      return `${found.url}${url.pathname}`;
-    } else {
-      console.log(`${cdapConfig['market.base.url']}/${path}`);
+    if (!Array.isArray(cdapConfig['market.base.urls'])) {
       return `${cdapConfig['market.base.url']}/${path}`;
     }
+    const marketName = getMarketNameParam(path);
+    const found = cdapConfig['market.base.urls'].find(element => element.name === marketName);
 
+    return found ? `${found.url}/${path}` : `${cdapConfig['market.base.urls'][0].url}/${path}`;
   }
   let routerhost = cdapConfig['router.server.address'],
     routerport =

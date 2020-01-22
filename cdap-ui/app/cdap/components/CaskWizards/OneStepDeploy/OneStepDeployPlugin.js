@@ -130,6 +130,7 @@ export default class OneStepDeployPlugin extends Component {
         }
 
         let fetchUrl = `/forwardMarketToCdap?source=${marketPath}&target=${cdapPath}`;
+        fetchUrl += marketName ? `&marketName=${marketName}` : '';
 
         fetch(fetchUrl, {
           method: 'GET',

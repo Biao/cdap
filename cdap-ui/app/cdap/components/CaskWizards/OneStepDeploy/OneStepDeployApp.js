@@ -67,7 +67,7 @@ export default class OneStepDeployApp extends Component {
   }
 
   publishApp() {
-    const { name, version } = this.props.input.package;
+    const { name, version, marketName } = this.props.input.package;
 
     let jarName;
 
@@ -103,6 +103,7 @@ export default class OneStepDeployApp extends Component {
     }
 
     let fetchUrl = `/forwardMarketToCdap?source=${marketPath}&target=${cdapPath}`;
+    fetchUrl += marketName ? `&marketName=${marketName}` : '';
 
     return Observable.create((observer) => {
       fetch(fetchUrl, {
