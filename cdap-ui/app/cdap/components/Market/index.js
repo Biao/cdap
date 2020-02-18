@@ -26,26 +26,15 @@ import UsecaseTab from 'components/Market/UsecaseTab';
 import { CATEGORY_MAP, DEFAULT_CATEGORIES } from 'components/Market/CategoryMap';
 import { objectQuery } from 'services/helpers';
 
-import { Observable } from 'rxjs/Observable';
-
-// flat and dedup an array which
-function flatAndDedupArray(array) {
-  return array.flat().reduce((accumulator, currentValue) => {
-    if (!find(accumulator, currentValue)) {
-      accumulator.push(currentValue);
-    }
-    return accumulator;
-  }, []);
-}
-
 export default class Market extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tabsList: [],
       tabConfig: null,
       activeTab: 1,
+      marketTabConfig: null,
+      marketTabActiveTab: 1,
     };
   }
 
@@ -61,20 +50,28 @@ export default class Market extends Component {
       }
     });
 
-    let listObservable;
     if (!Array.isArray(window.CDAP_CONFIG.marketUrls)) {
-      listObservable = MyMarketApi.list();
-    } else {
-      const observables = window.CDAP_CONFIG.marketUrls.map((element) =>
-        MyMarketApi.list({ marketName: element.name })
-      );
-      listObservable = Observable.combineLatest(observables).map(flatAndDedupArray);
+      MyMarketApi.list().subscribe(this.getCategories, (err) => {
+        console.log('Error', err);
+        MarketAction.setError();
+      });
+      return;
     }
 
-    listObservable.subscribe(this.getCategories, (err) => {
-      console.log('Error', err);
-      MarketAction.setError();
-    });
+    if (window.CDAP_CONFIG.marketUrls.length === 0) {
+      // handle error?
+      return;
+    }
+    const marketName = window.CDAP_CONFIG.marketUrls[0].name;
+    MyMarketApi.list({ marketName }).subscribe(
+      (packages) => {
+        this.getCategories(packages, marketName);
+      },
+      (err) => {
+        console.log('Error', err);
+        MarketAction.setError();
+      }
+    );
   }
 
   componentWillUnmount() {
@@ -85,7 +82,7 @@ export default class Market extends Component {
     }
   }
 
-  getCategories = (packages) => {
+  getCategories = (packages, marketName) => {
     const filteredPackages = packages.filter((packet) => {
       return (
         packet.categories.indexOf('datapack') === -1 &&
@@ -98,10 +95,7 @@ export default class Market extends Component {
     if (!Array.isArray(window.CDAP_CONFIG.marketUrls)) {
       categoriesObservable = MyMarketApi.getCategories();
     } else {
-      const observables = window.CDAP_CONFIG.marketUrls.map((element) =>
-        MyMarketApi.getCategories({ marketName: element.name })
-      );
-      categoriesObservable = Observable.combineLatest(observables).map(flatAndDedupArray);
+      categoriesObservable = MyMarketApi.getCategories({ marketName });
     }
 
     categoriesObservable.subscribe(
@@ -109,7 +103,7 @@ export default class Market extends Component {
         categories = categories.filter(
           (category) => ['gcp', 'usecase', 'datapack'].indexOf(category.name) === -1
         );
-        this.processPackagesAndCategories(filteredPackages, categories);
+        this.processPackagesAndCategories(filteredPackages, categories, marketName);
       },
       () => {
         // If categories do not come from backend, revert back to get categories from existing packages
@@ -143,9 +137,9 @@ export default class Market extends Component {
     );
   };
 
-  processPackagesAndCategories(packages, categories) {
+  processPackagesAndCategories(filteredPackages, categories, marketName) {
     const newState = {
-      tabConfig: this.constructTabConfig(categories),
+      tabConfig: this.constructTabConfig(categories, marketName),
     };
     const searchFilter = find(newState.tabConfig.tabs, { filter: MarketStore.getState().filter });
 
@@ -153,11 +147,39 @@ export default class Market extends Component {
       newState.activeTab = searchFilter.id;
     }
 
+    if (Array.isArray(window.CDAP_CONFIG.marketUrls) && window.CDAP_CONFIG.marketUrls.length > 1) {
+      newState.marketTabConfig = this.constructMarketTabConfig(newState);
+    }
+
     this.setState(newState);
-    MarketAction.setList(packages);
+    MarketAction.setList(filteredPackages);
   }
 
-  constructTabConfig(categories) {
+  constructMarketTabConfig(newState) {
+    const tabConfig = {
+      defaultTab: 1,
+      layout: 'horizontal',
+    };
+
+    const tabs = window.CDAP_CONFIG.marketUrls.map((market, index) => {
+      return {
+        id: index + 1,
+        filter: market.name,
+        name: market.name,
+        content: (
+          <ConfigurableTab
+            tabConfig={newState.tabConfig}
+            onTabClick={this.handleTabClick.bind(this)}
+            activeTab={newState.activeTab}
+          />
+        ),
+      };
+    });
+    tabConfig.tabs = tabs;
+    return tabConfig;
+  }
+
+  constructTabConfig(categories, marketName) {
     const tabConfig = {
       defaultTab: 1,
       defaultTabContent: <AllTabContents />,
@@ -189,7 +211,7 @@ export default class Market extends Component {
         icon = {
           type: 'link',
           arguments: {
-            url: MyMarketApi.getCategoryIcon(category),
+            url: MyMarketApi.getCategoryIcon(category.name, marketName),
           },
         };
       } else if (categoryContent.displayName) {
@@ -237,16 +259,56 @@ export default class Market extends Component {
     MarketAction.setFilter(searchFilter);
   }
 
+  handleMarketTabClick(id) {
+    const marketName = find(this.state.marketTabConfig.tabs, { id }).name;
+    MyMarketApi.list({ marketName }).subscribe(
+      (packages) => {
+        const appendedPackages = packages.map((element) => {
+          element.marketName = marketName;
+          return element;
+        });
+        this.getCategories(appendedPackages, marketName);
+      },
+      (err) => {
+        console.log('Error', err);
+        MarketAction.setError();
+      }
+    );
+
+    // Reset states before rendering market UI.
+    this.setState({ activeTab: 1, marketTabActiveTab: id });
+    MarketStore.dispatch({ type: 'RESET' });
+    MarketAction.setSelectedMarketName(marketName);
+  }
+
   render() {
     if (!this.state.tabConfig) {
       return null;
     }
 
+    // Do not show horizontal tab if there is only one market.
+    if (
+      !Array.isArray(window.CDAP_CONFIG.marketUrls) ||
+      window.CDAP_CONFIG.marketUrls.length === 1
+    ) {
+      return (
+        <ConfigurableTab
+          tabConfig={this.state.tabConfig}
+          onTabClick={this.handleTabClick.bind(this)}
+          activeTab={this.state.activeTab}
+        />
+      );
+    }
+
+    if (!this.state.marketTabConfig) {
+      return null;
+    }
+
     return (
       <ConfigurableTab
-        tabConfig={this.state.tabConfig}
-        onTabClick={this.handleTabClick.bind(this)}
-        activeTab={this.state.activeTab}
+        tabConfig={this.state.marketTabConfig}
+        onTabClick={this.handleMarketTabClick.bind(this)}
+        activeTab={this.state.marketTabActiveTab}
       />
     );
   }

@@ -23,6 +23,7 @@ import NamespaceStore from 'services/NamespaceStore';
 import 'whatwg-fetch';
 import { Observable } from 'rxjs/Observable';
 import OneStepDeployWizard from 'components/CaskWizards/OneStepDeploy';
+import MarketStore from 'components/Market/store/market-store';
 import cookie from 'react-cookie';
 import T from 'i18n-react';
 import { MyMarketApi } from 'api/market';
@@ -71,7 +72,8 @@ export default class OneStepDeployPlugin extends Component {
   }
 
   publishPlugin() {
-    const { name, version, marketName } = this.props.input.package;
+    const { name, version } = this.props.input.package;
+    const marketName = MarketStore.getState().selectedMarketName;
 
     const args = this.props.input.action.arguments;
 

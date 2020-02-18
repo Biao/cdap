@@ -77,10 +77,11 @@ export default class MarketPlaceUsecaseEntity extends Component {
         entityId: this.props.entityId,
       },
     });
+    const marketName = MarketStore.getState().selectedMarketName;
     MyMarketApi.get({
       packageName: this.props.entity.name,
       version: this.props.entity.version,
-      marketName: this.props.entity.marketName,
+      marketName,
     }).subscribe(
       (res) => {
         this.setState({

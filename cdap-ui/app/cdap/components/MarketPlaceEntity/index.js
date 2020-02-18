@@ -64,12 +64,11 @@ export default class MarketPlaceEntity extends Component {
     };
   }
   fetchEntityDetail(displayCTA = true) {
+    const marketName = MarketStore.getState().selectedMarketName;
     MyMarketApi.get({
       packageName: this.props.entity.name,
       version: this.props.entity.version,
-      // The following only works when marketName field is added in packages.json.
-      // marketName: this.props.entity.marketName,
-      marketName: 'healthcare',
+      marketName,
     }).subscribe(
       (res) => {
         this.setState({ entityDetail: res });
@@ -303,7 +302,6 @@ MarketPlaceEntity.childContextTypes = {
   entity: PropTypes.shape({
     name: PropTypes.string,
     version: PropTypes.string,
-    marketName: PropTypes.string,
     label: PropTypes.string,
     author: PropTypes.string,
     description: PropTypes.string,

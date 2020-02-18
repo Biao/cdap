@@ -23,6 +23,7 @@ import isNil from 'lodash/isNil';
 
 const initialState = {
   list: [],
+  selectedMarketName: 'Default',
   activeEntity: undefined,
   filter: '*',
   loading: true,
@@ -38,6 +39,10 @@ const market = (state = initialState, action) => {
           Object.assign(entity, { id: uuidV4() })
         ),
         loading: false,
+      });
+    case 'SET_SELECTED_MARKET_NAME':
+      return Object.assign({}, state, {
+        selectedMarketName: action.payload,
       });
     case 'SET_ACTIVE_ENTITY':
       return Object.assign({}, state, {

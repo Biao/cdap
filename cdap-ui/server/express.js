@@ -109,7 +109,7 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
   app.use(frameguard({ action: 'sameorigin' }));
 
   if (!isModeDevelopment()) {
-    let imageSrcs; 
+    let imgSrcs; 
     if (!Array.isArray(cdapConfig['market.base.urls'])) {
       let marketUrl = url.parse(cdapConfig['market.base.url']);
       imgSrcs = `${marketUrl.protocol}//${marketUrl.host}`;
@@ -225,6 +225,11 @@ function makeApp(authAddress, cdapConfig, uiSettings) {
       targetLink = req.query.target,
       sourceMethod = req.query.sourceMethod || 'GET',
       targetMethod = req.query.targetMethod || 'POST';
+    if (Array.isArray(cdapConfig['market.base.urls'])) {
+      const marketName = req.query.marketName;
+      sourceLink += `?marketName=${marketName}`;
+      targetLink += `?marketName=${marketName}`;
+    }
     let authToken = req.headers.authorization;
     if (
       !req.headers['session-token'] ||

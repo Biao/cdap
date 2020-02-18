@@ -36,10 +36,18 @@ function setError() {
   });
 }
 
+function setSelectedMarketName(name) {
+  MarketStore.dispatch({
+    type: 'SET_SELECTED_MARKET_NAME',
+    payload: name,
+  });
+}
+
 const MarketAction = {
   setList,
   setFilter,
   setError,
+  setSelectedMarketName,
 };
 
 export default MarketAction;

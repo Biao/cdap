@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import MarketStore from 'components/Market/store/market-store';
 import WizardModal from 'components/WizardModal';
 import Wizard from 'components/Wizard';
 import MarketPluginArtifactUploadWizardConfig from 'services/WizardConfigs/MarketPluginArtifactUploadWizardConfig';
@@ -46,10 +47,11 @@ export default class MarketHydratorPluginUpload extends Component {
     const args = this.props.input.action.arguments;
     let config = find(args, { name: 'config' });
 
+    const marketName = MarketStore.getState().selectedMarketName;
     let params = {
       entityName: this.props.input.package.name,
       entityVersion: this.props.input.package.version,
-      marketName: this.props.input.package.marketName,
+      marketName,
       filename: config.value,
     };
     MyMarketApi.getSampleData(params).subscribe((res) => {

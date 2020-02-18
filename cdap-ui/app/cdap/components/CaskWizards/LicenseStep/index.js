@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { MyMarketApi } from 'api/market';
+import MarketStore from 'components/Market/store/market-store';
 import T from 'i18n-react';
 require('./LicenseStep.scss');
 
@@ -29,7 +30,8 @@ export default class LicenseStep extends Component {
     };
   }
   componentWillMount() {
-    let { entityName, entityVersion, marketName, licenseFileName } = this.props;
+    let { entityName, entityVersion, licenseFileName } = this.props;
+    const marketName = MarketStore.getState().selectedMarketName;
     let params = {
       entityName,
       entityVersion,
@@ -69,7 +71,6 @@ export default class LicenseStep extends Component {
 LicenseStep.propTypes = {
   entityName: PropTypes.string,
   entityVersion: PropTypes.string,
-  marketName: PropTypes.string,
   licenseFileName: PropTypes.string,
   onReject: PropTypes.func.required,
   onAgree: PropTypes.func.required,

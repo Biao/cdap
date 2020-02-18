@@ -42,7 +42,7 @@ export default class ConfigurableTab extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ tabs: nextProps.tabConfig.tabs });
+    this.setState({ tabs: nextProps.tabConfig.tabs, activeTab: nextProps.activeTab });
   }
 
   state = {
@@ -89,6 +89,7 @@ export default class ConfigurableTab extends Component {
                   />
                 );
               }
+              console.log(`activeTab in configurable tab = ${this.state.activeTab}`);
               return (
                 <TabHead
                   layout={this.state.layout}

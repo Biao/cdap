@@ -26,6 +26,7 @@ require('./AllTabContents.scss');
 
 export default class AllTabContents extends Component {
   filterType = '';
+  list = [];
   constructor(props) {
     super(props);
     const filteredEntities = this.getFilteredEntities();
@@ -38,9 +39,10 @@ export default class AllTabContents extends Component {
     };
 
     this.unsub = MarketStore.subscribe(() => {
-      const { loading, isError, filter } = MarketStore.getState();
-      if (this.filterType !== filter) {
+      const { loading, isError, filter, list } = MarketStore.getState();
+      if (this.filterType !== filter || this.list !== list) {
         this.filterType = filter;
+        this.list = list;
         const unSubFilteredEntities = this.getFilteredEntities();
         this.setState({
           entities: unSubFilteredEntities,

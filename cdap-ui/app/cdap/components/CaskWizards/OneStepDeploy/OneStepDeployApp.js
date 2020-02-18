@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import MarketStore from 'components/Market/store/market-store';
 import OneStepDeployStore from 'services/WizardStores/OneStepDeploy/OneStepDeployStore';
 import OneStepDeployActions from 'services/WizardStores/OneStepDeploy/OneStepDeployActions';
 import NamespaceStore from 'services/NamespaceStore';
@@ -67,7 +68,8 @@ export default class OneStepDeployApp extends Component {
   }
 
   publishApp() {
-    const { name, version, marketName } = this.props.input.package;
+    const { name, version } = this.props.input.package;
+    const marketName = MarketStore.getState().selectedMarketName;
 
     let jarName;
 

@@ -38,9 +38,9 @@ function constructUrl(cdapConfig, path, origin = REQUEST_ORIGIN_ROUTER) {
     if (!Array.isArray(cdapConfig['market.base.urls'])) {
       return `${cdapConfig['market.base.url']}/${path}`;
     }
+
     const marketName = getMarketNameParam(path);
     const found = cdapConfig['market.base.urls'].find(element => element.name === marketName);
-
     return found ? `${found.url}/${path}` : `${cdapConfig['market.base.urls'][0].url}/${path}`;
   }
   let routerhost = cdapConfig['router.server.address'],

@@ -21,6 +21,7 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import {MyMarketApi} from 'api/market';
 import T from 'i18n-react';
 import AbstractWizard from 'components/AbstractWizard';
+import MarketStore from 'components/Market/store/market-store';
 import classnames from 'classnames';
 import uuidV4 from 'uuid/v4';
 import moment from 'moment';
@@ -44,10 +45,11 @@ export default class MarketEntityModal extends Component {
   }
 
   componentWillMount() {
+    const marketName = MarketStore.getState().selectedMarketName;
     MyMarketApi.get({
       packageName: this.props.entity.name,
       version: this.props.entity.version,
-      marketName: this.props.entity.marketName,
+      marketName,
     }).subscribe((res) => {
       this.setState({entityDetail: res});
     }, (err) => {

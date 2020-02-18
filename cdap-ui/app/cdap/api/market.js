@@ -44,16 +44,16 @@ export const MyMarketApi = {
     `/packages/:packageName/:version/spec.json`,
     requestOptions
   ),
-  getCategoryIcon: (category) => {
+  getCategoryIcon: (category, marketName) => {
     if (!Array.isArray(basepaths)) {
-      return `${basepath}/categories/${category.name}/icon.png`;
+      return `${basepath}/categories/${category}/icon.png`;
     }
 
-    if (category.marketName) {
-      const marketBaseUrl = getMarketBaseUrlFromName(category.marketName);
-      return `${marketBaseUrl}/categories/${category.name}/icon.png`;
+    if (marketName) {
+      const marketBaseUrl = getMarketBaseUrlFromName(marketName);
+      return `${marketBaseUrl}/categories/${category}/icon.png`;
     }
-    return `${basepaths[0].url}/categories/${category.name}/icon.png`;
+    return `${basepaths[0].url}/categories/${category}/icon.png`;
   },
   getIcon: (entity) => {
     if (!Array.isArray(basepaths)) {
@@ -64,7 +64,7 @@ export const MyMarketApi = {
       const marketBaseUrl = getMarketBaseUrlFromName(entity.marketName);
       return `${marketBaseUrl}/packages/${entity.name}/${entity.version}/icon.png`;
     }
-    // Uses the default CDAP url if no marketName. Any custom market should include its marketName in the entity.
+    // Uses the default CDAP url if no marketName. Any custom market should include its marketName in the package.
     return `${basepaths[0].url}/packages/${entity.name}/${entity.version}/icon.png`;
   },
   getSampleData: apiCreatorAbsPath(
